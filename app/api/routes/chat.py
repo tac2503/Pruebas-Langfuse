@@ -10,33 +10,38 @@ router = APIRouter()
 def chat(req: ChatRequest) -> ChatResponse:
     trace = langfuse.start_observation(
         name="chat-request",
-        as_type="span",
-        input={"message": req.message},
+        model="deepseek-v3.1:671b-cloud",
+        as_type="generation",
+        input= req.message
     )
     generation = trace.start_observation(
         name="ollama-response",
+        model="deepseek-v3.1:671b-cloud",
         as_type="generation",
-        input=req.message,
+        input= req.message,
     )
     
     try: 
         response = generate_response(req.message)
 
-        generation.update(output=response)
+        generation.update(output= response, model="deepseek-v3.1:671b-cloud")
         generation.end()
         
-        trace.update(output={"response": response})
+        trace.update(output= response, model="deepseek-v3.1:671b-cloud")
         trace.end()
         langfuse.flush()
         
         return ChatResponse(response=response, trace_enabled=LANGFUSE_ENABLED)
+        
+
     
     except Exception as e:
         generation.update(level="error", output=str(e))
         generation.end()
         trace.update(
             level="error",
-            output=str(e)
+            output=str(e),
+            model="deepseek-v3.1:671b-cloud"
         )
         trace.end()
         langfuse.flush()

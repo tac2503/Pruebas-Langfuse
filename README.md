@@ -7,8 +7,8 @@ Crear un archivo `.env` en la raiz del proyecto:
 
 ```env
 OLLAMA_BASE_URL=http://localhost:11434
-OLLAMA_MODEL=llama3.2:3b
-OLLAMA_TIMEOUT_SECONDS=90
+OLLAMA_MODEL=deepseek-v3.1:671b-cloud
+
 
 LANGFUSE_PUBLIC_KEY=tu_public_key
 LANGFUSE_SECRET_KEY=tu_secret_key

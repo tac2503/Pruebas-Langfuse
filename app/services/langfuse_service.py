@@ -13,7 +13,7 @@ class _NoOpTrace:
 	def update(self, **kwargs):
 		return self
 
-	def end(self, **kwargs):
+	def end(self, **kwargs):  
 		return None
 
 
@@ -37,7 +37,7 @@ def _build_langfuse_client():
 		client = Langfuse(
 			public_key=public_key,
 			secret_key=secret_key,
-			base_url=base_url,
+			base_url=base_url, 
 		)
 		return client, True
 	except Exception:
