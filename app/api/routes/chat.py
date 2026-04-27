@@ -3,35 +3,45 @@ from app.schemas.chat import ChatRequest, ChatResponse
 from app.services.ollama_service import generate_response
 from app.services.langfuse_service import LANGFUSE_ENABLED, langfuse
 
-
 router = APIRouter()
 
 @router.post("/", responses={502: {"description": "Error al llamar a Ollama"}})
 def chat(req: ChatRequest) -> ChatResponse:
+    
+    
     trace = langfuse.start_observation(
-        name="chat-request",
-        model="deepseek-v3.1:671b-cloud",
-        as_type="generation",
-        input= req.message
-    )
+    name="chat-request",
+    as_type="generation", 
+    input=req.message,
+    model="deepseek-v3.1:671b-cloud",
+    metadata={
+        "user_id": req.user_id,
+        "model": "deepseek-v3.1:671b-cloud"
+    }
+    )   
+
     generation = trace.start_observation(
         name="ollama-response",
-        model="deepseek-v3.1:671b-cloud",
         as_type="generation",
-        input= req.message,
+        model="deepseek-v3.1:671b-cloud",
+        input=req.message,
     )
-    
-    try: 
+
+    try:
         response = generate_response(req.message)
 
-        generation.update(output= response, model="deepseek-v3.1:671b-cloud")
+        generation.update(output=response, model="deepseek-v3.1:671b-cloud")
         generation.end()
-        
-        trace.update(output= response, model="deepseek-v3.1:671b-cloud")
+
+        trace.update(output=response, model="deepseek-v3.1:671b-cloud")
         trace.end()
+
         langfuse.flush()
-        
-        return ChatResponse(response=response, trace_enabled=LANGFUSE_ENABLED)
+
+        return ChatResponse(
+            response=response,
+            trace_enabled=LANGFUSE_ENABLED
+        )
         
 
     

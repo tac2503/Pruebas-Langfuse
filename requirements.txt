@@ -4,3 +4,5 @@ requests
 python-dotenv
 langfuse
 pydantic
+base64
+os

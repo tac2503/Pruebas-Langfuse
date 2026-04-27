@@ -5,7 +5,6 @@ from dotenv import load_dotenv
 load_dotenv()
 
 OLLAMA_BASE_URL = os.getenv("OLLAMA_BASE_URL", "http://localhost:11434")
-OLLAMA_MODEL = os.getenv("OLLAMA_MODEL", "deepseek-v3.1:671b-cloud")
 
 #OLLAMA_TIMEOUT_SECONDS = int(os.getenv("OLLAMA_TIMEOUT_SECONDS", "90"))
 
@@ -13,7 +12,7 @@ OLLAMA_MODEL = os.getenv("OLLAMA_MODEL", "deepseek-v3.1:671b-cloud")
 def generate_response(message: str) -> str:
     endpoint = f"{OLLAMA_BASE_URL.rstrip('/')}/api/generate"
     data = {
-        "model": OLLAMA_MODEL,
+        "model": "deepseek-v3.1:671b-cloud", 
         "prompt": message,
         "stream": False,
     }
