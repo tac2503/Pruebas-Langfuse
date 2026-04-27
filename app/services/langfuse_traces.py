@@ -22,6 +22,18 @@ def get_traces():
     response.raise_for_status()
     return response.json()
 
-# if __name__ == "__main__":
-#     traces = get_traces()
-#     print(json.dumps(traces, indent=2, ensure_ascii=False))
+def simplify_traces(traces:dict):
+    traces=traces.get("data",[])
+    simplified = []
+    
+    for t in traces:
+        simplified.append({
+            "id":t.get("id"),
+            "name":t.get("name"),
+            "input":t.get("input"),
+            "output":t.get("output"),
+            "metadata":t.get("metadata"),
+            "totalCost":t.get("totalCost"),
+            "latency":t.get("latency")
+        })
+    return simplified
