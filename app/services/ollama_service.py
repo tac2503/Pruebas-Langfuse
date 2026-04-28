@@ -7,8 +7,6 @@ load_dotenv()
 OLLAMA_BASE_URL = os.getenv("OLLAMA_BASE_URL", "http://localhost:11434")
 
 
-
-
 def generate_response(message: str) -> str:
     endpoint = f"{OLLAMA_BASE_URL.rstrip('/')}/api/generate"
     data = {
@@ -29,3 +27,4 @@ def generate_response(message: str) -> str:
         raise RuntimeError("Ollama devolvio una respuesta vacia")
 
     return output
+

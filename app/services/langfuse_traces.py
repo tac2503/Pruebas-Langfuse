@@ -22,6 +22,20 @@ def get_traces():
     response.raise_for_status()
     return response.json()
 
+def get_traces_id(trace_id:str):
+    credentials= f"{LANGFUSE_PUBLIC_KEY}:{LANGFUSE_SECRET_KEY}"
+    encoded_credentials: str = base64.b64encode(credentials.encode()).decode()
+    
+    headers={
+        "Authorization": f"Basic {encoded_credentials}"
+    }
+    
+    url =f"https://cloud.langfuse.com/api/public/traces/{trace_id}"
+    
+    response = requests.get(url, headers=headers)
+    response.raise_for_status()
+    return response.json()
+
 def simplify_traces(traces:dict):
     traces=traces.get("data",[])
     simplified = []
@@ -36,4 +50,16 @@ def simplify_traces(traces:dict):
             "totalCost":t.get("totalCost"),
             "latency":t.get("latency")
         })
+    return simplified
+
+def simplify_trace(trace:dict):
+    simplified = {
+        "id":trace.get("id"),
+        "name":trace.get("name"),
+        "input":trace.get("input"),
+        "output":trace.get("output"),
+        "metadata":trace.get("metadata"),
+        "totalCost":trace.get("totalCost"),
+        "latency":trace.get("latency")
+    }
     return simplified
